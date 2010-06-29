@@ -58,13 +58,13 @@ public class ChemblWizardPage extends WizardPage implements Listener {
 	private Label title, score, type, label, target, key, history;
 	private GridData gridData, gridData2;
 	private Table table, table2;
-	private TableViewer tableViewer;
+	private TableViewer tableViewer2, tableViewer1;
 	private Button buttonGo,save, targetprot, compounds,check1,check2,check3,check4;
-	private Button selectAll,delete;
+	private Button checkAll1,checkAll2,delete;
 	private Font font;
 	private TableItem item;
 	private TableColumn[] columns, columns2;
-	private Text textfield;
+	private Text textfield, textf;
 
 	protected ChemblWizardPage(String pageName) {
 		super(pageName);
@@ -115,32 +115,45 @@ public class ChemblWizardPage extends WizardPage implements Listener {
 
 		check1 = new Button(container, SWT.RADIO);
 		check1.setText("chebiId             ");
+		check1.setToolTipText("Example of chebi id: 106677");
 		check1.setSelection(true);
 		check1.setVisible(true);
 		check1.setLayoutData(gridData);
 
 		check3 = new Button(container, SWT.RADIO);
 		check3.setText("Keyword          ");
+		check3.setToolTipText("Search with a keyword");
 		check3.setSelection(false);
 		check3.setVisible(true);
 		check3.setLayoutData(gridData);
 
 		check2 = new Button(container, SWT.RADIO);
-		check2.setText("SMILES        ");
+		check2.setText("SMILES");
+		check2.setToolTipText("OBS! very slow search");
 		check2.setSelection(false);
 		check2.setVisible(true);
 		check2.setLayoutData(gridData);
 
 		check4 = new Button(container, SWT.RADIO);
 		check4.setText("Fasta sequence          ");
+		check4.setToolTipText("Add a FASTA sequence");
 		check4.setSelection(false);
 		check4.setVisible(false);
 		check4.setLayoutData(gridData);
+		check4.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {	
+				//			textf = new Text(container, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
+				gridData = new GridData(GridData.FILL_BOTH);
+				gridData.horizontalSpan = 4;
+				gridData.verticalSpan=10;
+				textfield.setLayoutData(gridData);
+			}});
 
 		//Adding field to search in
 		textfield = new Text(container, SWT.BORDER);
 		gridData = new GridData(GridData.FILL_HORIZONTAL);
 		gridData.horizontalSpan = 4;
+		//		gridData.verticalSpan=10;
 		textfield.setLayoutData(gridData);
 
 		buttonGo = new Button(container, SWT.PUSH);
@@ -177,7 +190,7 @@ public class ChemblWizardPage extends WizardPage implements Listener {
 		score = new Label(container, SWT.BORDER);
 		score.setText("score: ");
 		score.setLayoutData(gridData);
-		
+
 		target = new Label(container, SWT.BORDER);
 		target.setText("target: ");
 		target.setLayoutData(gridData2);
@@ -194,9 +207,10 @@ public class ChemblWizardPage extends WizardPage implements Listener {
 		gridData.horizontalSpan = 5;
 		label.setLayoutData(gridData);
 
-		table = new Table(container, SWT.BORDER );
+		table = new Table(container, SWT.BORDER |SWT.CHECK);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
+		tableViewer1 = new CheckboxTableViewer(table);
 		gridData = new GridData(gridData.FILL_HORIZONTAL);
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.grabExcessVerticalSpace = true;
@@ -254,14 +268,20 @@ public class ChemblWizardPage extends WizardPage implements Listener {
 		});
 
 		save = new Button(container, SWT.PUSH);
-		save.setText("save all");
+		save.setText("Select");
 		gridData = new GridData();
 		gridData.horizontalSpan = 1;
 		save.setLayoutData(gridData);
 
+		checkAll1 = new Button(container, SWT.CHECK);
+		checkAll1.setText("Check all");
+		gridData = new GridData();
+		gridData.horizontalSpan = 4;
+		checkAll1.setLayoutData(gridData);
+
 		label = new Label(container, SWT.NONE);
 		label.setFont(font);
-		label.setText("Data stored for saving: ");
+		label.setText("Selected items: ");
 		gridData = new GridData();
 		gridData.horizontalSpan = 5;
 		label.setLayoutData(gridData);
@@ -270,10 +290,7 @@ public class ChemblWizardPage extends WizardPage implements Listener {
 		table2.setHeaderVisible(true);
 		table2.setLinesVisible(true);
 		table2.setLayoutData(gridData);
-
-		 tableViewer = new CheckboxTableViewer(table2);
-
-		
+		tableViewer2 = new CheckboxTableViewer(table2);
 		gridData = new GridData(gridData.FILL_HORIZONTAL);
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.grabExcessVerticalSpace = true;
@@ -362,10 +379,10 @@ public class ChemblWizardPage extends WizardPage implements Listener {
 		gridData.horizontalSpan = 1;
 		delete.setLayoutData(gridData);
 
-		selectAll = new Button(container, SWT.CHECK);
-		selectAll.setText("Select all");
-		selectAll.setLayoutData(gridData);
-		
+		checkAll2 = new Button(container, SWT.CHECK);
+		checkAll2.setText("Check all");
+		checkAll2.setLayoutData(gridData);
+
 		addListeners();
 	}
 
@@ -397,7 +414,7 @@ public class ChemblWizardPage extends WizardPage implements Listener {
 				}else if(isInteger(text)==false){
 					setMessage("No hits for your search. You searched with a string instead of a chebi number, perhaps " +
 					"a keyword search is a more appropriate search.");
-			}
+				}
 			}
 			else if(check2.getSelection()){
 				matrix =chembl.getCompoundInfoWithSmiles(text);
@@ -468,7 +485,7 @@ public class ChemblWizardPage extends WizardPage implements Listener {
 				}else if(isInteger(text)==false){
 					setMessage("No hits for your search. You searched with a string instead of a chebi number, perhaps " +
 					"a keyword search is a more appropriate search.");
-			}
+				}
 			}
 			else if(check2.getSelection()){
 				matrix =chembl.getTargetIDWithEC(text);
@@ -494,6 +511,9 @@ public class ChemblWizardPage extends WizardPage implements Listener {
 					addToTable(matrix,table, columns);
 				}
 			}
+			else if(check4.getSelection()){
+				//			text.matches()
+			}
 			else {
 				setErrorMessage("There exist an error somewhere, please try again.");
 				setPageComplete(false );
@@ -508,8 +528,8 @@ public class ChemblWizardPage extends WizardPage implements Listener {
 
 
 	/**
-	  * Help methods 
-	  */
+	 * Help methods 
+	 */
 	private TableColumn[] createTableColumn(Table table, int size, int id){
 		if(id == 0){
 			columns = new TableColumn[size];
@@ -577,7 +597,8 @@ public class ChemblWizardPage extends WizardPage implements Listener {
 		buttonGo.addListener(SWT.Selection, this);
 		save.addListener(SWT.Selection, this);
 		delete.addListener(SWT.Selection, this);
-		selectAll.addListener(SWT.Selection,this);
+		checkAll2.addListener(SWT.Selection,this);
+		checkAll1.addListener(SWT.Selection,this);
 
 	}
 
@@ -594,8 +615,19 @@ public class ChemblWizardPage extends WizardPage implements Listener {
 			check2.setText("EC number");
 			check4.setVisible(true);
 		}
+		if(event.widget ==check4 || event.widget == check2){
+
+		}
 
 		if(event.widget == buttonGo){
+			
+			if(textfield.getText().isEmpty()){
+				setErrorMessage("Empty textfield");
+			}
+			else{
+				setErrorMessage(null);
+				setMessage("This is a search tool for chEMBL. Searches may be done from eiter a compound or a protein perspective.\n" +
+				" Need help? Push the help button for further information. ");
 			table.clearAll();
 			table.removeAll();
 			history.setText("Last search: " +textfield.getText());
@@ -613,21 +645,52 @@ public class ChemblWizardPage extends WizardPage implements Listener {
 			else{
 				showMessage("error","Selection Error","Both boxes can't be checked");
 			}
+			}
 		}
 
 		if(event.widget == save){
-			TableItem[] ti = table.getItems();			
-			for(int i =0; i< ti.length;i++){
-				TableItem t = new TableItem(table2, SWT.CHECK);
-				for(int j = 0; j < table.getColumnCount(); j++){  
-					t.setText(j, ti[i].getText(j));
+			//			TableItem[] ti = table.getItems();			
+			//			for(int i =0; i< ti.length;i++){
+			//				TableItem t = new TableItem(table2, SWT.CHECK);
+			//				for(int j = 0; j < table.getColumnCount(); j++){  
+			//					t.setText(j, ti[i].getText(j));
+			//				}
+			//			}
+			
+			TableItem[] ti = table.getItems();
+			ArrayList<Integer> helper = new ArrayList<Integer>();
+			for(int i=0; i<ti.length;i++){	
+				if(ti[i].getChecked()){
+					helper.add(table.indexOf(ti[i]));	
+					TableItem t = new TableItem(table2, SWT.CHECK);
+					for(int j = 0; j < table.getColumnCount(); j++){  
+						t.setText(j, ti[i].getText(j));
+				}
 				}
 			}
-			packColumns(columns2);
-			setPageComplete(true);
-			((ChemblWizard) getWizard()).data.tab = table2;	
-			 selectAll.setSelection(false);
+			
+			if(helper.size()>0){
+				setErrorMessage(null);
+				setMessage("This is a search tool for chEMBL. Searches may be done from eiter a compound or a protein perspective.\n" +
+				" Need help? Push the help button for further information. ");
+				
+			
+				int[] indices = new int [helper.size()];
+				for(int j=0; j<helper.size();j++){
+				indices[j] = helper.get(j);
+				}
+				
+				table.remove(indices);
+				packColumns(columns2);
+				setPageComplete(true);
+				((ChemblWizard) getWizard()).data.tab = table2;	
+				checkAll1.setSelection(false);
+			}else{
+				setErrorMessage("No item selected");
+			
+			}
 		}
+		
 		if(event.widget == delete){
 			TableItem[] ti = table2.getItems();
 			ArrayList<Integer> helper = new ArrayList<Integer>();
@@ -636,21 +699,43 @@ public class ChemblWizardPage extends WizardPage implements Listener {
 					helper.add(table2.indexOf(ti[i]));	    
 				}
 			}
+			if(helper.size()>0){
+			setErrorMessage(null);
+			setMessage("This is a search tool for chEMBL. Searches may be done from eiter a compound or a protein perspective.\n" +
+			" Need help? Push the help button for further information. ");
+			
 			int[] indices = new int [helper.size()];
 			for(int j=0; j< helper.size();j++){
 				indices[j] = helper.get(j);
 			}
 			table2.remove(indices);
-			selectAll.setSelection(false);
+			checkAll2.setSelection(false);
+			if(table2.getItemCount()<1){
+				setPageComplete(false);
+			}
+			((ChemblWizard) getWizard()).data.tab = table2;
+			}else{
+				setErrorMessage("No item selected");
+			}
 		}
-		if(event.widget == selectAll && selectAll.getSelection()){
-			((CheckboxTableViewer) tableViewer).setAllChecked(true);
-			}
-		if(event.widget == selectAll && selectAll.getSelection()==false){
-			((CheckboxTableViewer) tableViewer).setAllChecked(false);
-			}
+		
+		
+		if(event.widget == checkAll1 && checkAll1.getSelection()){
+			((CheckboxTableViewer) tableViewer1).setAllChecked(true);
+		}
+		if(event.widget == checkAll1 && checkAll1.getSelection()==false){
+			((CheckboxTableViewer) tableViewer1).setAllChecked(false);
+		}
+		if(event.widget == checkAll2 && checkAll2.getSelection()){
+			((CheckboxTableViewer) tableViewer2).setAllChecked(true);
+		}
+		if(event.widget == checkAll2 && checkAll2.getSelection()==false){
+			((CheckboxTableViewer) tableViewer2).setAllChecked(false);
+		}
+
+
 	}
-	
+
 }//end
 
 
