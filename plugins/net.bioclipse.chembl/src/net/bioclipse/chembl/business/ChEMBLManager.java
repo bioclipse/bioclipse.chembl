@@ -521,6 +521,45 @@ public class ChEMBLManager implements IBioclipseManager {
 		monitor.worked(100);
 		monitor.done();
 	}
+	
+	public void saveFile(IFile filename, String string, IProgressMonitor monitor)
+	throws BioclipseException, IOException {
+		if (filename.exists()) {
+			throw new BioclipseException("File already exists!");
+		}
+
+		if (monitor == null)
+			monitor = new NullProgressMonitor();
+
+		string = string.replaceAll("PREFIX", "\nPREFIX");
+		string = string.replaceAll("SELECT", "\nSELECT");
+		string = string.replaceAll("WHERE", "\nWHERE");
+		
+		monitor.beginTask("Writing file", 1);
+		try {
+			ByteArrayOutputStream output = new ByteArrayOutputStream();
+
+				byte but[]= string.getBytes();
+				output.write(but);
+
+			output.close();
+			filename.create(
+					new ByteArrayInputStream(output.toByteArray()),
+					false,
+					monitor
+			);
+		}
+		catch (Exception e) {
+			monitor.worked(1);
+			monitor.done();
+			throw new BioclipseException("Error while writing file.", e);
+		}
+
+		monitor.worked(1);
+		monitor.done();
+	}
+	
+	
 	public void saveCSV(IFile filename, ArrayList<TableItem> lst, IProgressMonitor monitor)
 	throws BioclipseException, IOException {
 		String s;
