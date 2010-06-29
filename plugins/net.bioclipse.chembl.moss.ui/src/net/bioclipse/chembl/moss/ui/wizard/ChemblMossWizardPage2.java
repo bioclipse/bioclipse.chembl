@@ -131,7 +131,7 @@ public class ChemblMossWizardPage2 extends WizardPage implements IRunnableContex
 					table.clearAll();
 					table.removeAll();
 					setErrorMessage(null);
-					List<String> list = chembl.MossAvailableActivities(selected);
+					List<String> list = chembl.mossAvailableActivities(selected);
 					if(list.size()>0){
 						String[] item = new String[list.size()];
 						for(int i=0;i<list.size(); i++){
@@ -166,8 +166,8 @@ public class ChemblMossWizardPage2 extends WizardPage implements IRunnableContex
 									spinn.setSelection(50);
 									IStringMatrix matrix, matrix2;
 									try {
-										matrix = chembl.MossGetProtFamilyCompAct(selected, index, spinn.getSelection());
-										matrix2 = chembl.MossProtFamilyCompounds(selected,index);
+										matrix = chembl.mossGetCompoundsFromProteinFamilyWithActivity(selected, index, spinn.getSelection());
+										matrix2 = chembl.mossGetCompoundsFromProteinFamily(selected,index);
 										cboxAct.setText(index);
 										info.setText("Distinct compunds: "+ matrix2.getRowCount());
 										addToTable(matrix);
@@ -229,13 +229,13 @@ public class ChemblMossWizardPage2 extends WizardPage implements IRunnableContex
 
 
 					//SPARQL queries for fetching compounds and activities
-					IStringMatrix matrix = chembl.MossGetProtFamilyCompAct(cbox.getItem(cbox.getSelectionIndex()), selected,spinn.getSelection());
+					IStringMatrix matrix = chembl.mossGetCompoundsFromProteinFamilyWithActivity(cbox.getItem(cbox.getSelectionIndex()), selected,spinn.getSelection());
 					addToTable(matrix);
 					//Count the amount of compounds there is for one hit, i.e. same query without limit.
-					IStringMatrix matrix2 = chembl.MossProtFamilyCompounds(cbox.getItem(cbox.getSelectionIndex()),cboxAct.getItem(cboxAct.getSelectionIndex()));
+					IStringMatrix matrix2 = chembl.mossGetCompoundsFromProteinFamily(cbox.getItem(cbox.getSelectionIndex()),cboxAct.getItem(cboxAct.getSelectionIndex()));
 					info.setText("Distinct compounds: "+ matrix2.getRowCount());
 					//Query for activities. Adds them to the plot series.
-					matrixAct = chembl.MossGetProtFamilyCompAct(cbox.getItem(cbox.getSelectionIndex()), selected);
+					matrixAct = chembl.mossGetCompoundsFromProteinFamilyWithActivity(cbox.getItem(cbox.getSelectionIndex()), selected);
 					//IStringMatrix matrix = chembl.MossProtFamilyCompounds(cbox.getItem(cbox.getSelectionIndex()), selected,50);
 					//IStringMatrix matrix = chembl.MossProtFamilyCompounds(cbox.getItem(cbox.getSelectionIndex()), selected, spinn.getSelection());
 
@@ -311,7 +311,7 @@ public class ChemblMossWizardPage2 extends WizardPage implements IRunnableContex
 				try{
 					table.clearAll();
 					table.removeAll();
-					IStringMatrix matrix = chembl.MossProtFamilyCompounds(cbox.getItem(cbox.getSelectionIndex()),cboxAct.getItem(cboxAct.getSelectionIndex()), selected);
+					IStringMatrix matrix = chembl.mossGetCompounds(cbox.getItem(cbox.getSelectionIndex()),cboxAct.getItem(cboxAct.getSelectionIndex()), selected);
 					table.setVisible(true);
 					addToTable(matrix);
 				}catch(BioclipseException e1){
@@ -338,7 +338,7 @@ public class ChemblMossWizardPage2 extends WizardPage implements IRunnableContex
 				//						public void run(IProgressMonitor monitor) {
 				//							monitor.beginTask("Searching for compounds", IProgressMonitor.UNKNOWN);
 				try {
-					IStringMatrix matrix = chembl.MossGetProtFamilyCompAct(cbox.getItem(cbox.getSelectionIndex()), cboxAct.getItem(cboxAct.getSelectionIndex()));
+					IStringMatrix matrix = chembl.mossGetCompoundsFromProteinFamilyWithActivity(cbox.getItem(cbox.getSelectionIndex()), cboxAct.getItem(cboxAct.getSelectionIndex()));
 
 					//								final IStringMatrix matrix = chembl.MossProtFamilyCompoundsAct("TK", "Ki");
 					addToTable(matrix);
@@ -476,7 +476,7 @@ public class ChemblMossWizardPage2 extends WizardPage implements IRunnableContex
 				table.clearAll();
 				table.removeAll();
 				try {
-					IStringMatrix matrix = chembl.MossSetActivityBound(matrixAct, spinnLow.getSelection(), spinnHigh.getSelection());
+					IStringMatrix matrix = chembl.mossSetActivityBound(matrixAct, spinnLow.getSelection(), spinnHigh.getSelection());
 					addToTable(matrix);
 					spinn.setSelection(matrix.getRowCount());
 					info.setText("Total compound hit: "+ matrix.getRowCount());

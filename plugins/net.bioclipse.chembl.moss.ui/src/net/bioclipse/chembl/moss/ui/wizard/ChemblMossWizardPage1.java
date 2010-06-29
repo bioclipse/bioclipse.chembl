@@ -131,7 +131,7 @@ public class ChemblMossWizardPage1 extends WizardPage implements IRunnableContex
 					table.clearAll();
 					table.removeAll();
 					setErrorMessage(null);
-					List<String> list = chembl.MossAvailableActivities(selected);
+					List<String> list = chembl.mossAvailableActivities(selected);
 					if(list.size()>0){
 						String[] item = new String[list.size()];
 						for(int i=0;i<list.size(); i++){
@@ -166,11 +166,19 @@ public class ChemblMossWizardPage1 extends WizardPage implements IRunnableContex
 									spinn.setSelection(50);
 									IStringMatrix matrix, matrix2;
 									try {
-										matrix = chembl.MossGetProtFamilyCompAct(selected, index, spinn.getSelection());
-										matrix2 = chembl.MossProtFamilyCompounds(selected,index);
+										matrix = chembl.mossGetCompoundsFromProteinFamilyWithActivity(selected, index, spinn.getSelection());
+										matrix2 = chembl.mossGetCompoundsFromProteinFamily(selected,index);
+										
+										helpToHistogram(chembl.mossGetCompoundsFromProteinFamilyWithActivity(selected, index));
 										cboxAct.setText(index);
 										info.setText("Distinct compunds: "+ matrix2.getRowCount());
 										addToTable(matrix);
+										
+										//adds info about target, activities and compounds to a file
+										((ChemblMossWizard) getWizard()).data.matrix3 = chembl.mossGetCompoundsFromProteinFamilyWithActivityTarget(cbox.getItem(cbox.getSelectionIndex()), cboxAct.getItem(cboxAct.getSelectionIndex()),spinn.getSelection());
+										//adds the query to a file
+										((ChemblMossWizard) getWizard()).data.query = chembl.mossGetCompoundsFromProteinFamilyWithActivitySPARQL(selected, index);
+									
 									} catch (BioclipseException e1) {
 										// TODO Auto-generated catch block
 										e1.printStackTrace();
@@ -229,52 +237,57 @@ public class ChemblMossWizardPage1 extends WizardPage implements IRunnableContex
 
 
 					//SPARQL queries for fetching compounds and activities
-					IStringMatrix matrix = chembl.MossGetProtFamilyCompAct(cbox.getItem(cbox.getSelectionIndex()), selected,spinn.getSelection());
+					IStringMatrix matrix = chembl.mossGetCompoundsFromProteinFamilyWithActivity(cbox.getItem(cbox.getSelectionIndex()), selected,spinn.getSelection());
 					addToTable(matrix);
 					//Count the amount of compounds there is for one hit, i.e. same query without limit.
-					IStringMatrix matrix2 = chembl.MossProtFamilyCompounds(cbox.getItem(cbox.getSelectionIndex()),cboxAct.getItem(cboxAct.getSelectionIndex()));
+					IStringMatrix matrix2 = chembl.mossGetCompoundsFromProteinFamily(cbox.getItem(cbox.getSelectionIndex()),cboxAct.getItem(cboxAct.getSelectionIndex()));
 					info.setText("Distinct compounds: "+ matrix2.getRowCount());
 					//Query for activities. Adds them to the plot series.
-					matrixAct = chembl.MossGetProtFamilyCompAct(cbox.getItem(cbox.getSelectionIndex()), selected);
+					matrixAct = chembl.mossGetCompoundsFromProteinFamilyWithActivity(cbox.getItem(cbox.getSelectionIndex()), selected);
 					//IStringMatrix matrix = chembl.MossProtFamilyCompounds(cbox.getItem(cbox.getSelectionIndex()), selected,50);
 					//IStringMatrix matrix = chembl.MossProtFamilyCompounds(cbox.getItem(cbox.getSelectionIndex()), selected, spinn.getSelection());
-
-
+					
+					((ChemblMossWizard) getWizard()).data.matrix3 = chembl.mossGetCompoundsFromProteinFamilyWithActivityTarget(cbox.getItem(cbox.getSelectionIndex()), selected,spinn.getSelection());
+					
+					((ChemblMossWizard) getWizard()).data.query= chembl.mossGetCompoundsFromProteinFamilyWithActivitySPARQL(cbox.getItem(cbox.getSelectionIndex()), selected);
+					
 					//Adds activity to histogram series
-					series = new XYSeries("Activity for compounds");
-					histogramSeries = new HistogramDataset();
-					histogramSeries.setType(HistogramType.FREQUENCY);
-					ArrayList<Double> activites = new ArrayList<Double>();
-					double value;
-					int cnt =1;
-					double[] histact = new double[matrixAct.getRowCount()+1];
-					for(int i = 1; i< matrixAct.getRowCount()+1;i++){
-						if(matrixAct.get(i,"actval").equals("")){ value =0;}
-						else{value = Double.parseDouble(matrixAct.get(i,"actval"));}
-						activites.add(value);
-					}
-					//Sort list to increasing order of activities and adds them to histogram
-					Collections.sort(activites);
-					for(int i=0; i< activites.size(); i++){
-						double d=activites.get(i);
-						histact[i]=d;
-						int t= activites.size()-1;
-						if(i == t){
-							series.add(d,cnt);
-						}else{
-							double dd= activites.get(i+1);
-
-							if(d==dd){
-								cnt++;
-							}
-							else{
-								histact[i]=d;
-								series.add(d,cnt);
-								cnt =1;
-							}
-						}
-					}
-					histogramSeries.addSeries("Histogram",histact,matrixAct.getRowCount());
+					helpToHistogram(matrixAct);
+					
+//					series = new XYSeries("Activity for compounds");
+//					histogramSeries = new HistogramDataset();
+//					histogramSeries.setType(HistogramType.FREQUENCY);
+//					ArrayList<Double> activites = new ArrayList<Double>();
+//					double value;
+//					int cnt =1;
+//					double[] histact = new double[matrixAct.getRowCount()+1];
+//					for(int i = 1; i< matrixAct.getRowCount()+1;i++){
+//						if(matrixAct.get(i,"actval").equals("")){ value =0;}
+//						else{value = Double.parseDouble(matrixAct.get(i,"actval"));}
+//						activites.add(value);
+//					}
+//					//Sort list to increasing order of activities and adds them to histogram
+//					Collections.sort(activites);
+//					for(int i=0; i< activites.size(); i++){
+//						double d=activites.get(i);
+//						histact[i]=d;
+//						int t= activites.size()-1;
+//						if(i == t){
+//							series.add(d,cnt);
+//						}else{
+//							double dd= activites.get(i+1);
+//
+//							if(d==dd){
+//								cnt++;
+//							}
+//							else{
+//								histact[i]=d;
+//								series.add(d,cnt);
+//								cnt =1;
+//							}
+//						}
+//					}
+//					histogramSeries.addSeries("Histogram",histact,matrixAct.getRowCount());
 					button.setEnabled(true);
 					spinn.setEnabled(true);
 					check.setEnabled(true);
@@ -311,7 +324,7 @@ public class ChemblMossWizardPage1 extends WizardPage implements IRunnableContex
 				try{
 					table.clearAll();
 					table.removeAll();
-					IStringMatrix matrix = chembl.MossProtFamilyCompounds(cbox.getItem(cbox.getSelectionIndex()),cboxAct.getItem(cboxAct.getSelectionIndex()), selected);
+					IStringMatrix matrix = chembl.mossGetCompounds(cbox.getItem(cbox.getSelectionIndex()),cboxAct.getItem(cboxAct.getSelectionIndex()), selected);
 					table.setVisible(true);
 					addToTable(matrix);
 				}catch(BioclipseException e1){
@@ -338,7 +351,7 @@ public class ChemblMossWizardPage1 extends WizardPage implements IRunnableContex
 				//						public void run(IProgressMonitor monitor) {
 				//							monitor.beginTask("Searching for compounds", IProgressMonitor.UNKNOWN);
 				try {
-					IStringMatrix matrix = chembl.MossGetProtFamilyCompAct(cbox.getItem(cbox.getSelectionIndex()), cboxAct.getItem(cboxAct.getSelectionIndex()));
+					IStringMatrix matrix = chembl.mossGetCompoundsFromProteinFamilyWithActivity(cbox.getItem(cbox.getSelectionIndex()), cboxAct.getItem(cboxAct.getSelectionIndex()));
 
 					//								final IStringMatrix matrix = chembl.MossProtFamilyCompoundsAct("TK", "Ki");
 					addToTable(matrix);
@@ -373,7 +386,7 @@ public class ChemblMossWizardPage1 extends WizardPage implements IRunnableContex
 		
 		label = new Label(container, SWT.NONE);
 		label.setText("Optional: Modify activity values.");
-		Font font1 = new Font(container.getDisplay(), "Helvetica", 13, SWT.NONE);
+		Font font1 = new Font(container.getDisplay(), "Helvetica", 15, SWT.NONE);
         label.setFont(font1);
 		gridData = new GridData();
 		gridData.horizontalSpan=4;
@@ -410,6 +423,7 @@ public class ChemblMossWizardPage1 extends WizardPage implements IRunnableContex
 		});
 		label = new Label(container, SWT.NONE);
 		label.setText("Look at activty span: ");
+		label.setToolTipText("The graph don't consider limited search, will display for all available compounds");
 		gridData = new GridData();
 		gridData.horizontalSpan=1;
 		label.setLayoutData(gridData);
@@ -476,7 +490,8 @@ public class ChemblMossWizardPage1 extends WizardPage implements IRunnableContex
 				table.clearAll();
 				table.removeAll();
 				try {
-					IStringMatrix matrix = chembl.MossSetActivityBound(matrixAct, spinnLow.getSelection(), spinnHigh.getSelection());
+					IStringMatrix matrix = chembl.mossSetActivityBound(matrixAct, spinnLow.getSelection(), spinnHigh.getSelection());
+					
 					addToTable(matrix);
 					spinn.setSelection(matrix.getRowCount());
 					info.setText("Total compound hit: "+ matrix.getRowCount());
