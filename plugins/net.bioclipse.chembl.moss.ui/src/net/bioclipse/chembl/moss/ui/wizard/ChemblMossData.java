@@ -17,5 +17,8 @@ public class ChemblMossData {
 	
 	IStringMatrix matrix;
 	IStringMatrix matrix2;
-	String m = "/Virtual/ChemblMossOutput";
+	IStringMatrix matrix3;
+	String m = "/Virtual/ChemblMossOutput.txt";
+	String queryFile = "/Virtual/Query.sparql";
+	String query;
 }
