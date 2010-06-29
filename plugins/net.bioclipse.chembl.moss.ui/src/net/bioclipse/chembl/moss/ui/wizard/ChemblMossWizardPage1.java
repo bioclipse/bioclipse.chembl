@@ -567,6 +567,43 @@ public class ChemblMossWizardPage1 extends WizardPage implements IRunnableContex
 		column2.pack();
 		column3.pack();
 	}
+	public void helpToHistogram(IStringMatrix matrix){
+		//Adds activity to histogram series
+		series = new XYSeries("Activity for compounds");
+		histogramSeries = new HistogramDataset();
+		histogramSeries.setType(HistogramType.FREQUENCY);
+		ArrayList<Double> activites = new ArrayList<Double>();
+		double value;
+		int cnt =1;
+		double[] histact = new double[matrix.getRowCount()+1];
+		for(int i = 1; i< matrix.getRowCount()+1;i++){
+			if(matrix.get(i,"actval").equals("")){ value =0;}
+			else{value = Double.parseDouble(matrix.get(i,"actval"));}
+			activites.add(value);
+		}
+		//Sort list to increasing order of activities and adds them to histogram
+		Collections.sort(activites);
+		for(int i=0; i< activites.size(); i++){
+			double d=activites.get(i);
+			histact[i]=d;
+			int t= activites.size()-1;
+			if(i == t){
+				series.add(d,cnt);
+			}else{
+				double dd= activites.get(i+1);
+
+				if(d==dd){
+					cnt++;
+				}
+				else{
+					histact[i]=d;
+					series.add(d,cnt);
+					cnt =1;
+				}
+			}
+		}
+		histogramSeries.addSeries("Histogram",histact,matrix.getRowCount());
+	}
 		
 	@Override
 	public void run(boolean fork, boolean cancelable,
