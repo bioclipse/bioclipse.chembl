@@ -641,12 +641,53 @@ public class ChEMBLManager implements IBioclipseManager {
 		monitor.worked(100);
 		monitor.done();
 	}
+    
+    public void saveCSVT(IFile filename, Table tab, IProgressMonitor monitor)
+	throws BioclipseException, IOException {
+		
+		//IFile filename = ResourcePathTransformer.getInstance().transform(in);
+		if (filename.exists()) {
+			throw new BioclipseException("File already exists!");
+		}
+		if (monitor == null)
+			monitor = new NullProgressMonitor();
+		monitor.beginTask("Writing file", 100);
+		try {
+			ByteArrayOutputStream output = new ByteArrayOutputStream();
+			TableItem[] ti = tab.getItems();			
+			for(int i =0; i< ti.length;i++){
+				String s="";
+				for(int j = 0; j < tab.getColumnCount(); j++){  
+					if(ti[i].getText(j).equals("")){
+						j = tab.getColumnCount();
+					}else s= s+ ti[i].getText(j) + ",";
+				}
+				s=s+"\n";
+				byte but[]= s.getBytes();
+				output.write(but);	
+			}
+			output.close();
+			filename.create(
+					new ByteArrayInputStream(output.toByteArray()),
+					false,
+					monitor
+			);
+		}
+		catch (Exception e) {
+			monitor.worked(100);
+			monitor.done();
+			throw new BioclipseException("Error while writing file.", e);
+		}
+
+		monitor.worked(100);
+		monitor.done();
+	}
 	
 	/* MoSS Section
 	* Methods that involve MoSS interaction.
 	*/
 
-	public void MossSaveFormat(IFile filename, IStringMatrix matrix, IProgressMonitor monitor)
+	public void saveToMossFormat(IFile filename, IStringMatrix matrix, IProgressMonitor monitor)
 	throws BioclipseException, IOException {
 
 		String s; 
@@ -688,7 +729,7 @@ public class ChEMBLManager implements IBioclipseManager {
 		monitor.worked(100);
 		monitor.done();
 	}
-	public void MossSaveFormat(IFile filename, IStringMatrix matrix,IStringMatrix matrix2, IProgressMonitor monitor)
+	public void saveToMossFormat(IFile filename, IStringMatrix matrix,IStringMatrix matrix2, IProgressMonitor monitor)
 	throws BioclipseException, IOException {
 
 		String s; 
@@ -743,12 +784,12 @@ public class ChEMBLManager implements IBioclipseManager {
 	}
 
 	//Collects compounds from a protein family
-	public IStringMatrix MossProtFamilyCompounds(String fam, String actType, int limit) throws BioclipseException{
+	public IStringMatrix mossGetCompounds(String fam, String actType, int limit) throws BioclipseException{
 
 		String sparql =
 			"PREFIX chembl: <http://rdf.farmbio.uu.se/chembl/onto/#> " +
 			"PREFIX bo: <http://www.blueobelisk.org/chemistryblogs/>"+
-			"SELECT DISTINCT ?smiles where{ " +
+			"SELECT DISTINCT ?smiles WHERE{ " +
 			"	?target a chembl:Target;" +
 			"       chembl:classL5 ?fam. " + //+ " \"" + fam + "\"." +
 			"	?assay chembl:hasTarget ?target ."+
@@ -766,13 +807,13 @@ public class ChEMBLManager implements IBioclipseManager {
 		return matrix;
 	}
 
-	public IStringMatrix MossProtFamilyCompounds(String fam, String actType) 
+	public IStringMatrix mossGetCompoundsFromProteinFamily(String fam, String actType) 
 	throws BioclipseException{
 
 		String sparql =
 			"PREFIX chembl: <http://rdf.farmbio.uu.se/chembl/onto/#> " +
 			"PREFIX bo: <http://www.blueobelisk.org/chemistryblogs/>"+
-			"SELECT DISTINCT ?smiles where{ " +
+			"SELECT DISTINCT ?smiles WHERE{ " +
 			"	?target a chembl:Target;" +
 			"       chembl:classL5 ?fam. " + 
 			"	?assay chembl:hasTarget ?target . " +
@@ -788,13 +829,20 @@ public class ChEMBLManager implements IBioclipseManager {
 		return matrix;
 	}
 
-	public IStringMatrix MossGetProtFamilyCompAct(String fam, String actType) 
+	public IStringMatrix mossGetCompoundsFromProteinFamilyWithActivity(String fam, String actType) 
 	throws BioclipseException{
 
+		String sparql = mossGetCompoundsFromProteinFamilyWithActivitySPARQL(fam, actType); 
+
+		IStringMatrix matrix = rdf.sparqlRemote("http://rdf.farmbio.uu.se/chembl/sparql",sparql);
+		return matrix;
+	}
+
+	public String mossGetCompoundsFromProteinFamilyWithActivitySPARQL(String fam, String actType) {
 		String sparql =
 			"PREFIX chembl: <http://rdf.farmbio.uu.se/chembl/onto/#> " +
 			"PREFIX bo: <http://www.blueobelisk.org/chemistryblogs/>"+
-			"SELECT DISTINCT ?smiles ?actval where{ " +
+			"SELECT DISTINCT ?smiles ?actval WHERE{ " +
 			"	?target a chembl:Target;" +
 			"       chembl:classL5 ?fam. " + 
 			"	?assay chembl:hasTarget ?target . " +
@@ -805,19 +853,48 @@ public class ChEMBLManager implements IBioclipseManager {
 			"	?mol bo:smiles ?smiles.  " +
 			" FILTER regex(?fam, " + "\"^" + fam + "$\"" + ", \"i\")."+
 			" FILTER regex(?actType, " + "\"^" + actType + "$\"" + ", \"i\")."+
-			" }"; 
+			" }";
+		return sparql;
+	}
+	
+	
+	public IStringMatrix mossGetCompoundsFromProteinFamilyWithActivityTarget(String fam, String actType, int limit) 
+	throws BioclipseException{
+
+		String sparql = compoundActTarget(fam, actType, limit); 
 
 		IStringMatrix matrix = rdf.sparqlRemote("http://rdf.farmbio.uu.se/chembl/sparql",sparql);
+		cutter(matrix);
 		return matrix;
 	}
 
-	public IStringMatrix MossGetProtFamilyCompAct(String fam, String actType, Integer limit) 
+	public String compoundActTarget(String fam, String actType, int limit) {
+		String sparql =
+			"PREFIX chembl: <http://rdf.farmbio.uu.se/chembl/onto/#> " +
+			"PREFIX bo: <http://www.blueobelisk.org/chemistryblogs/>"+
+			"SELECT DISTINCT ?smiles ?actval ?target WHERE{ " +
+			"	?target a chembl:Target;" +
+			"       chembl:classL5 ?fam. " + 
+			"	?assay chembl:hasTarget ?target . " +
+			"   ?activity chembl:onAssay ?assay ;" +
+			"	    chembl:type ?actType ; " + 
+			"		chembl:standardValue ?actval;"+
+			"	    chembl:forMolecule ?mol ."+
+			"	?mol bo:smiles ?smiles.  " +
+			" FILTER regex(?fam, " + "\"^" + fam + "$\"" + ", \"i\")."+
+			" FILTER regex(?actType, " + "\"^" + actType + "$\"" + ", \"i\")."+
+			" } LIMIT" + limit;
+		return sparql;
+	}
+	
+
+	public IStringMatrix mossGetCompoundsFromProteinFamilyWithActivity(String fam, String actType, Integer limit) 
 	throws BioclipseException{
 
 		String sparql =
 			"PREFIX chembl: <http://rdf.farmbio.uu.se/chembl/onto/#> " +
 			"PREFIX bo: <http://www.blueobelisk.org/chemistryblogs/>"+
-			"SELECT DISTINCT ?smiles ?actval where{ " +
+			"SELECT DISTINCT ?smiles ?actval WHERE{ " +
 			"	?target a chembl:Target;" +
 			"       chembl:classL5 ?fam. " + 
 			"	?assay chembl:hasTarget ?target . " +
@@ -834,20 +911,20 @@ public class ChEMBLManager implements IBioclipseManager {
 		return matrix;
 	}
 
-	public IStringMatrix MossGetProtFamilyCompActBounds(String fam, String actType, Integer lower, Integer upper) 
+	public IStringMatrix mossGetCompoundsFromProteinFamilyWithActivityBound(String fam, String actType, Integer lower, Integer upper) 
 	throws BioclipseException{
 		
-		return MossSetActivityBound(MossGetProtFamilyCompAct(fam, actType), lower, upper);
+		return mossSetActivityBound(mossGetCompoundsFromProteinFamilyWithActivity(fam, actType), lower, upper);
 	
 	}	
 
-	public List<String> MossAvailableActivities(String fam) throws BioclipseException{
+	public List<String> mossAvailableActivities(String fam) throws BioclipseException{
 		List<String> list = new ArrayList<String>();
 
 		String sparql =
 			"PREFIX chembl: <http://rdf.farmbio.uu.se/chembl/onto/#> " +
 			"PREFIX bo: <http://www.blueobelisk.org/chemistryblogs/>"+
-			"SELECT DISTINCT ?actType where{ " +
+			"SELECT DISTINCT ?actType WHERE{ " +
 			"	?activity chembl:type ?actType; " +  
 			"             chembl:onAssay ?assay ." +
 			"	?assay chembl:hasTarget ?target ." +
@@ -858,7 +935,7 @@ public class ChEMBLManager implements IBioclipseManager {
 
 		//			"PREFIX chembl: <http://rdf.farmbio.uu.se/chembl/onto/#> " +
 		//			"PREFIX bo: <http://www.blueobelisk.org/chemistryblogs/>"+
-		//			"SELECT ?actType where{ " +
+		//			"SELECT ?actType WHERE{ " +
 		//			"	?target a chembl:Target;" +
 		//			"           chembl:classL5 ?fam. " + 
 		//			"	?assay chembl:hasTarget ?target ." +
@@ -878,7 +955,7 @@ public class ChEMBLManager implements IBioclipseManager {
 		return list;
 	}
 
-	public IStringMatrix MossSetActivityBound(IStringMatrix matrix, int lower, int upper)
+	public IStringMatrix mossSetActivityBound(IStringMatrix matrix, int lower, int upper)
 	throws BioclipseException{
 		int cnt =1;
 		StringMatrix modified = new StringMatrix();
@@ -915,7 +992,7 @@ public class ChEMBLManager implements IBioclipseManager {
 		}
 		return modified;
 	}
-	public void MoSSViewHistogram(IStringMatrix matrix) throws BioclipseException{
+	public void moSSViewHistogram(IStringMatrix matrix) throws BioclipseException{
 		
 		XYSeries series = new XYSeries("Activity for compounds");
 		HistogramDataset histogramSeries = new HistogramDataset();

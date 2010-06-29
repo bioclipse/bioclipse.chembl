@@ -153,10 +153,25 @@ public interface IChEMBLManager extends IBioclipseManager {
 	throws BioclipseException, IOException;
 	
 	@PublishedMethod(
+			params = "IFile file, StringMatrix matrix",
+			methodSummary = "Save into CSV files"
+	)
+	public void saveCSV(IFile file, IStringMatrix matrix)
+	throws BioclipseException, IOException;
+	
+	@PublishedMethod(
 			params = "String file, Arraylist<TableItem> item",
 			methodSummary = "Save into CSV files"
 	)
 	public void saveCSV(IFile filename, ArrayList<TableItem> lst)
+	throws BioclipseException, IOException;
+	
+	
+	@PublishedMethod(
+			params = "IFile file, String string",
+			methodSummary = "Save into file"
+	)
+	public void saveFile(IFile file, String string)
 	throws BioclipseException, IOException;
 	
 	@PublishedMethod(
@@ -167,24 +182,47 @@ public interface IChEMBLManager extends IBioclipseManager {
 		throws BioclipseException, IOException;
 	
 	@PublishedMethod(
+			params = "String file, Table table",
+			methodSummary = "Save into CSV files"
+	)
+	 public void saveCSVT(IFile in, Table tab, IProgressMonitor monitor)
+		throws BioclipseException, IOException;
+	
+	@PublishedMethod(
 			params = "String file, StringMatrix matrix",
 			methodSummary = "Save into a format that Moss accept"
 	)
-	public void MossSaveFormat(String file, IStringMatrix matrix)
+	public void saveToMossFormat(String file, IStringMatrix matrix)
+	throws BioclipseException, IOException;
+	
+	@PublishedMethod(
+			params = "IFile file, StringMatrix matrix",
+			methodSummary = "Save into a format that Moss accept"
+	)
+	public void saveToMossFormat(IFile file, IStringMatrix matrix)
 	throws BioclipseException, IOException;
 
 	@PublishedMethod(
 			params = "String file, StringMatrix matrix, StringMatrix matrix",
 			methodSummary = "Save into a format that Moss accept"
 	)
-	public void MossSaveFormat(String file, IStringMatrix matrix,IStringMatrix matrix2)
+	public void saveToMossFormat(String file, IStringMatrix matrix,IStringMatrix matrix2)
 	throws BioclipseException, IOException;
+	
+	@PublishedMethod(
+			params = "IFile file, StringMatrix matrix, StringMatrix matrix",
+			methodSummary = "Save into a format that Moss accept"
+	)
+	public void saveToMossFormat(IFile file, IStringMatrix matrix,IStringMatrix matrix2)
+	throws BioclipseException, IOException;
+	
+	
 	@PublishedMethod(
 			params = "String family, String activityType, Integer limit",
 			methodSummary = "Collects compound for a MoSS run given protein family and" +
 			"activity type. Limit your search by adding a limit number."
 	)
-	public IStringMatrix MossProtFamilyCompounds(String fam, String actType, int limit) 
+	public IStringMatrix mossGetCompounds(String fam, String actType, int limit) 
 	throws BioclipseException;
 
 	@PublishedMethod(
@@ -192,26 +230,34 @@ public interface IChEMBLManager extends IBioclipseManager {
 			methodSummary = "Finds compounds and activity value for a protein familit with" +
 			"specified activity and with a limit search."
 	)
-	public IStringMatrix MossGetProtFamilyCompAct(String fam, String actType, Integer limit) 
+	public IStringMatrix mossGetCompoundsFromProteinFamilyWithActivity(String fam, String actType, Integer limit) 
 	throws BioclipseException;
 	@PublishedMethod(
 			params = "String family, String activityType",
 			methodSummary = "Perform as MossProtFamily without limit"
 	)
-	public IStringMatrix MossGetProtFamilyCompAct(String fam, String actType) 
+	public IStringMatrix mossGetCompoundsFromProteinFamilyWithActivity(String fam, String actType) 
+	throws BioclipseException;
+	
+	
+	@PublishedMethod(
+			params = "String family, String activityType",
+			methodSummary = "Perform as MossProtFamily without limit"
+	)
+	public IStringMatrix mossGetCompoundsFromProteinFamilyWithActivityTarget(String fam, String actType, int Limit) 
 	throws BioclipseException;
 	
 	@PublishedMethod(
 			params = "String family, String activityTypem int lower,int upper",
 			methodSummary = "Perform as MossProtFamily with limit for activities"
 	)
-	public IStringMatrix MossGetProtFamilyCompActBounds(String fam, String actType, Integer lower, Integer upper) 
+	public IStringMatrix mossGetCompoundsFromProteinFamilyWithActivityBound(String fam, String actType, Integer lower, Integer upper) 
 	throws BioclipseException;
 	@PublishedMethod(
 			params = "String family, String activityType",
 			methodSummary = "Perform as MossProtFamily without limit"
 	)
-	public IStringMatrix MossProtFamilyCompounds(String fam, String actType) 
+	public IStringMatrix mossGetCompoundsFromProteinFamily(String fam, String actType) 
 	throws BioclipseException;
 
 
@@ -219,7 +265,7 @@ public interface IChEMBLManager extends IBioclipseManager {
 			params = "String family",
 			methodSummary = "Returns available activities for a protein family"
 	)
-	public List<String> MossAvailableActivities(String fam) throws BioclipseException;
+	public List<String> mossAvailableActivities(String fam) throws BioclipseException;
 	
 	@PublishedMethod(
 			params = "IStringMAtrix matrix, Integer lowerBound, Integer upperBound",
@@ -227,16 +273,21 @@ public interface IChEMBLManager extends IBioclipseManager {
 					"lower and upper bound this method returns a new martix with activity values" +
 					"in the bound."
 	)
-	public IStringMatrix MossSetActivityBound(IStringMatrix matrix, int lower, int upper)
+	public IStringMatrix mossSetActivityBound(IStringMatrix matrix, int lower, int upper)
 	throws BioclipseException;
 	
 	@PublishedMethod(
-			params = "IStringMAtrix matrix",
+			params = "IStringMatrix matrix",
 			methodSummary = "Only take matrices with smiles and activities. Will open a histogram for the" +
 					"activities."
 	)
-	public void MoSSViewHistogram(IStringMatrix matrix)throws BioclipseException;
-
+	public void moSSViewHistogram(IStringMatrix matrix)throws BioclipseException;
+	
+	@PublishedMethod(
+			params = "",
+			methodSummary = ""
+	)
+	public String mossGetCompoundsFromProteinFamilyWithActivitySPARQL(String fam, String act);
 
 }
 
