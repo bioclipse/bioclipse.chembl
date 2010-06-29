@@ -15,5 +15,6 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: The Bioclipse Project
 Import-Package: net.bioclipse.rdf.model,
- org.apache.log4j
+ org.apache.log4j,
+ org.eclipse.ui.dialogs
 Bundle-ClassPath: .
