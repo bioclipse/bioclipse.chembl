@@ -9,11 +9,11 @@
 		</category>
 	 	<wizard
 		   id = "net.bioclipse.chembl.moss.ui.wizard.ChemblMossWizard"
-		   name = "MoSS-ChEMBL Wizard"
+		   name = "ChEMBL-MoSS Wizard"
 		   project="false"
 		   class="net.bioclipse.chembl.moss.ui.wizard.ChemblMossWizard"
 		   category="net.bioclipse.chembl.moss.ui"
-		   icon="icons/steroid_a.png">
+		   icon="pics/chemblmoss.png">
 		   
 	   	   <description>Create a MoSS input file with chEMBL compounds.</description>
 		   <selection class="org.eclipse.core.resources.IResource"/>
@@ -34,6 +34,17 @@
 	         </action>
 	      </objectContribution>
 	   </extension>
-
+	   
+ <extension
+	         point="org.eclipse.help.contexts">
+	         <contexts file="contexts.xml" />
+	   </extension>
+	   
+	   <extension
+	         point="org.eclipse.help.toc">
+	      <toc
+	            file="toc.xml"
+	            primary="true"/>
+	   </extension>
  
 </plugin>
