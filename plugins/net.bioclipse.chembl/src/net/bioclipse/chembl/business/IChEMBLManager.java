@@ -277,6 +277,13 @@ public interface IChEMBLManager extends IBioclipseManager {
 	throws BioclipseException;
 	
 	@PublishedMethod(
+			params = "IStringMAtrix matrix, Integer lowerBound, Integer upperBound",
+			methodSummary = ""
+	)
+	public IStringMatrix mossSetActivityOutsideBound(IStringMatrix matrix, int lower, int upper)
+	throws BioclipseException;
+	
+	@PublishedMethod(
 			params = "IStringMatrix matrix",
 			methodSummary = "Only take matrices with smiles and activities. Will open a histogram for the" +
 					"activities."

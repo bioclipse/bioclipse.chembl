@@ -96,7 +96,7 @@ public class ChEMBLManager implements IBioclipseManager {
 	public List<String> getActivities(Integer targetID)
 	throws BioclipseException {
 		List<String> activities = new ArrayList<String>();
-	
+
 		String sparql =
 			"PREFIX blueobelisk: <http://www.blueobelisk.org/chemistryblogs/> "+
 			"PREFIX chembl: <http://rdf.farmbio.uu.se/chembl/onto/#> " +
@@ -107,11 +107,11 @@ public class ChEMBLManager implements IBioclipseManager {
 			" ?ass chembl:hasTarget " + 
 			"    <http://rdf.farmbio.uu.se/chembl/target/t" + targetID + ">. " +
 			"}";
-	
+
 		IStringMatrix matrix = rdf.sparqlRemote(CHEMBL_SPARQL_ENDPOINT, sparql);
 		if (matrix.getRowCount() > 0)
 			activities.addAll(matrix.getColumn("act"));
-	
+
 		return activities;
 	}
 
@@ -123,8 +123,8 @@ public class ChEMBLManager implements IBioclipseManager {
 			"SELECT DISTINCT ?chebi WHERE{"+
 			"<http://rdf.farmbio.uu.se/chembl/molecule/m"+ molID +"> owl:sameAs ?chebi."+
 			"FILTER regex(?chebi ,\"chebi\") }";
-	
-	
+
+
 		IStringMatrix matrix = rdf.sparqlRemote(CHEMBL_SPARQL_ENDPOINT, sparql);
 		String chebi = matrix.getColumn("chebi").get(0).substring(25);
 		return chebi;
@@ -132,10 +132,10 @@ public class ChEMBLManager implements IBioclipseManager {
 
 	public List<String> getChebiId(String molIDs)
 	throws BioclipseException{
-	
+
 		String[] molID = molIDs.split(",");
 		List<String> chebis = new ArrayList<String>();
-	
+
 		for(int i=0; i < molID.length; i++){
 			String sparql=
 				"PREFIX owl: <http://www.w3.org/2002/07/owl#>"+
@@ -152,7 +152,7 @@ public class ChEMBLManager implements IBioclipseManager {
 
 	public IStringMatrix getCompoundInfo(Integer chebiID)
 	throws BioclipseException, IOException{
-	
+
 		String sparql=
 			"PREFIX dc: <http://purl.org/dc/elements/1.1/>"+    
 			"PREFIX bo: <http://www.blueobelisk.org/chemistryblogs/> "+
@@ -168,26 +168,26 @@ public class ChEMBLManager implements IBioclipseManager {
 			"          chembl:hasConfScore ?score." +
 			"    ?target dc:title ?title." +
 			"}";
-	
+
 		IStringMatrix matrix = rdf.sparqlRemote(CHEMBL_SPARQL_ENDPOINT, sparql);
 		cutter(matrix);
-	
+
 		return matrix;
 	}
 
 	public List<IStringMatrix> getCompoundInfo(String chebiIDs)
 	throws BioclipseException, IOException{
-	
+
 		List<IStringMatrix> matrices = new ArrayList<IStringMatrix>();
 		String[] chebiID = chebiIDs.split(",");
 		for(int i = 0; i<chebiID.length; i++){
 			String sparql=
-	
+
 				"PREFIX dc: <http://purl.org/dc/elements/1.1/>"+    
 				"PREFIX bo: <http://www.blueobelisk.org/chemistryblogs/> "+
 				"PREFIX owl: <http://www.w3.org/2002/07/owl#>"+
 				"PREFIX chembl: <http://rdf.farmbio.uu.se/chembl/onto/#>"+
-	
+
 				"SELECT DISTINCT ?act ?asstype ?type ?score ?target ?title WHERE{"+
 				"  ?act chembl:forMolecule <http://rdf.farmbio.uu.se/chembl/molecule/m" + chebiID[i] + "> ." +
 				"  <http://rdf.farmbio.uu.se/chembl/molecule/m" + chebiID[i] + "> bo:smiles ?SMILES." +
@@ -198,7 +198,7 @@ public class ChEMBLManager implements IBioclipseManager {
 				"        chembl:hasConfScore ?score." +
 				"  ?target dc:title ?title." +
 				"}";
-	
+
 			IStringMatrix matrix = rdf.sparqlRemote(CHEMBL_SPARQL_ENDPOINT, sparql);
 			cutter(matrix);
 			matrices.add(matrix);
@@ -208,13 +208,13 @@ public class ChEMBLManager implements IBioclipseManager {
 
 	public IStringMatrix getCompoundInfoWithKeyword(String keyword)
 	throws BioclipseException{
-	
+
 		String sparql=
 			"PREFIX chembl: <http://rdf.farmbio.uu.se/chembl/onto/#> " +
 			"PREFIX dc: <http://purl.org/dc/elements/1.1/>"+
 			"PREFIX owl: <http://www.w3.org/2002/07/owl#>"+
 			"PREFIX bo: <http://www.blueobelisk.org/chemistryblogs/>"+
-			
+
 			"SELECT DISTINCT ?target ?description ?chebi ?smiles WHERE {" +
 			"  ?target a chembl:Target;" +
 			"          chembl:hasDescription ?description ." +
@@ -226,7 +226,7 @@ public class ChEMBLManager implements IBioclipseManager {
 			"  FILTER regex(?chebi, \"chebi\" )."+
 			"  FILTER regex(?description , " + "\"" + keyword + "\" , \"i\") ." +
 			"} LIMIT 1000";
-	
+
 		IStringMatrix matrix = rdf.sparqlRemote(CHEMBL_SPARQL_ENDPOINT, sparql);
 		cutter(matrix);
 		return matrix;
@@ -243,7 +243,7 @@ public class ChEMBLManager implements IBioclipseManager {
 		smiles =smiles.replaceAll("\\*","\\\\\\\\*");
 		smiles =smiles.replaceAll("\\/","\\\\\\\\/");
 		//		smiles =smiles.replaceAll("\\\\","\\\\\\\\\\");
-	
+
 		String sparql =
 			"PREFIX chembl: <http://rdf.farmbio.uu.se/chembl/onto/#> " +
 			"PREFIX dc: <http://purl.org/dc/elements/1.1/>"+
@@ -265,7 +265,7 @@ public class ChEMBLManager implements IBioclipseManager {
 
 	public IStringMatrix getPCM(String actType, String classL6, String classL3)
 	throws BioclipseException{
-	
+
 		String sparql =
 			"PREFIX bo: <http://www.blueobelisk.org/chemistryblogs/> "+
 			"PREFIX chembl: <http://rdf.farmbio.uu.se/chembl/onto/#>"+
@@ -290,7 +290,7 @@ public class ChEMBLManager implements IBioclipseManager {
 			"  FILTER regex(?type,  \"^" + actType + "$\", \"i\" )"+
 			"}"
 			;
-	
+
 		IStringMatrix matrix = rdf.sparqlRemote(CHEMBL_SPARQL_ENDPOINT, sparql);
 		cutter(matrix);
 		return matrix;
@@ -310,7 +310,7 @@ public class ChEMBLManager implements IBioclipseManager {
 			"  chembl:hasTargetType ?type ;" +
 			" chembl:organism ?organism ." +
 			"}";
-	
+
 		return rdf.sparqlRemote(CHEMBL_SPARQL_ENDPOINT, sparql);
 	}
 
@@ -348,7 +348,7 @@ public class ChEMBLManager implements IBioclipseManager {
 	public Map<String, Double> getQSARData(Integer targetID, String activity)
 	throws BioclipseException {
 		Map<String, Double> results = new HashMap<String, Double>();
-	
+
 		String sparql =
 			"PREFIX bo: <http://www.blueobelisk.org/chemistryblogs/> "+
 			"PREFIX chembl: <http://rdf.farmbio.uu.se/chembl/onto/#> " +
@@ -362,7 +362,7 @@ public class ChEMBLManager implements IBioclipseManager {
 			" ?ass chembl:hasTarget " + 
 			"<http://rdf.farmbio.uu.se/chembl/target/t" + targetID + ">. " +
 			"}";
-	
+
 		IStringMatrix matrix = rdf.sparqlRemote(CHEMBL_SPARQL_ENDPOINT, sparql);
 		for (int i=0; i<matrix.getRowCount(); i++) {
 			try {
@@ -376,7 +376,7 @@ public class ChEMBLManager implements IBioclipseManager {
 				results.put(matrix.get(i, "smiles"), Double.NaN);
 			}
 		}
-	
+
 		return results;
 	}
 
@@ -521,7 +521,7 @@ public class ChEMBLManager implements IBioclipseManager {
 		monitor.worked(100);
 		monitor.done();
 	}
-	
+
 	public void saveFile(IFile filename, String string, IProgressMonitor monitor)
 	throws BioclipseException, IOException {
 		if (filename.exists()) {
@@ -534,13 +534,13 @@ public class ChEMBLManager implements IBioclipseManager {
 		string = string.replaceAll("PREFIX", "\nPREFIX");
 		string = string.replaceAll("SELECT", "\nSELECT");
 		string = string.replaceAll("WHERE", "\nWHERE");
-		
+
 		monitor.beginTask("Writing file", 1);
 		try {
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
 
-				byte but[]= string.getBytes();
-				output.write(but);
+			byte but[]= string.getBytes();
+			output.write(but);
 
 			output.close();
 			filename.create(
@@ -558,8 +558,8 @@ public class ChEMBLManager implements IBioclipseManager {
 		monitor.worked(1);
 		monitor.done();
 	}
-	
-	
+
+
 	public void saveCSV(IFile filename, ArrayList<TableItem> lst, IProgressMonitor monitor)
 	throws BioclipseException, IOException {
 		String s;
@@ -571,18 +571,18 @@ public class ChEMBLManager implements IBioclipseManager {
 		monitor.beginTask("Writing file", 100);
 		try {
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
-			
-//			for(int i = 0; i<lst.size(); i++){
-				s=
+
+			//			for(int i = 0; i<lst.size(); i++){
+			s=
 				lst.get(0)+"";//.getText()+",";
-//				lst.get(i).getText(i+1)+",";
-//				lst.get(i).getText(i+2)+","+
-//				lst.get(i).getText(i+3)+","+
-//				lst.get(i).getText(i+4)+"/n";
-			
-				byte but[]= s.getBytes();
-				output.write(but);
-//				}
+			//				lst.get(i).getText(i+1)+",";
+			//				lst.get(i).getText(i+2)+","+
+			//				lst.get(i).getText(i+3)+","+
+			//				lst.get(i).getText(i+4)+"/n";
+
+			byte but[]= s.getBytes();
+			output.write(but);
+			//				}
 			output.close();
 			filename.create(
 					new ByteArrayInputStream(output.toByteArray()),
@@ -599,11 +599,11 @@ public class ChEMBLManager implements IBioclipseManager {
 		monitor.worked(100);
 		monitor.done();
 	}
-	
+
 	//H€T
-    public void saveCSVT(String in, Table tab, IProgressMonitor monitor)
+	public void saveCSVT(String in, Table tab, IProgressMonitor monitor)
 	throws BioclipseException, IOException {
-		
+
 		IFile filename = ResourcePathTransformer.getInstance().transform(in);
 		if (filename.exists()) {
 			throw new BioclipseException("File already exists!");
@@ -641,10 +641,10 @@ public class ChEMBLManager implements IBioclipseManager {
 		monitor.worked(100);
 		monitor.done();
 	}
-    
-    public void saveCSVT(IFile filename, Table tab, IProgressMonitor monitor)
+
+	public void saveCSVT(IFile filename, Table tab, IProgressMonitor monitor)
 	throws BioclipseException, IOException {
-		
+
 		//IFile filename = ResourcePathTransformer.getInstance().transform(in);
 		if (filename.exists()) {
 			throw new BioclipseException("File already exists!");
@@ -682,22 +682,58 @@ public class ChEMBLManager implements IBioclipseManager {
 		monitor.worked(100);
 		monitor.done();
 	}
-	
-	/* MoSS Section
-	* Methods that involve MoSS interaction.
-	*/
 
+	/* MoSS Section
+	 * Methods that involve MoSS interaction.
+	 */
+
+//	public void saveToMossFormat(IFile filename, IStringMatrix matrix, IProgressMonitor monitor)
+//	throws BioclipseException, IOException {
+//
+//		String s; 
+//		//IFile filename =ResourcePathTransformer.getInstance().transform(file);
+//		ArrayList<String> fam = new ArrayList<String>();
+//
+//		for(int i=1; i<matrix.getRowCount()+1; i++){
+//			fam.add(matrix.get(i,"smiles"));
+//		}
+//
+//		if (filename.exists()) {
+//			throw new BioclipseException("File already exists!");
+//		}
+//
+//		if (monitor == null)
+//			monitor = new NullProgressMonitor();
+//		monitor.beginTask("Writing file", 100);
+//		try {
+//			ByteArrayOutputStream output = new ByteArrayOutputStream();
+//
+//			for(int i = 0; i<fam.size(); i++){
+//				s = i+1 +",0," + fam.get(i) + "\n";	
+//				byte but[]= s.getBytes();
+//				output.write(but); 
+//			}
+//			output.close();
+//			filename.create(
+//					new ByteArrayInputStream(output.toByteArray()),
+//					false,
+//					monitor
+//			);
+//		}
+//		catch (Exception e) {
+//			monitor.worked(100);
+//			monitor.done();
+//			throw new BioclipseException("Error while writing moss file.", e);
+//		} 
+//
+//		monitor.worked(100);
+//		monitor.done();
+//	}
+	
 	public void saveToMossFormat(IFile filename, IStringMatrix matrix, IProgressMonitor monitor)
 	throws BioclipseException, IOException {
 
 		String s; 
-		//IFile filename =ResourcePathTransformer.getInstance().transform(file);
-		ArrayList<String> fam = new ArrayList<String>();
-
-		for(int i=1; i<matrix.getRowCount()+1; i++){
-			fam.add(matrix.get(i,"smiles"));
-		}
-
 		if (filename.exists()) {
 			throw new BioclipseException("File already exists!");
 		}
@@ -708,10 +744,18 @@ public class ChEMBLManager implements IBioclipseManager {
 		try {
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
 
-			for(int i = 0; i<fam.size(); i++){
-				s = i+1 +",0," + fam.get(i) + "\n";	
-				byte but[]= s.getBytes();
-				output.write(but); 
+			for(int i = 1; i<matrix.getRowCount()+1; i++){
+				
+				if (matrix.get(i, "active").equals("yes")){
+					s = "A"+i +",0," + matrix.get(i, "smiles") + "\n";	
+					byte but[]= s.getBytes();
+					output.write(but); 
+				}
+				else{
+					s = "I"+i +",1," + matrix.get(i, "smiles") + "\n";
+					byte but[]= s.getBytes();
+					output.write(but);
+				}
 			}
 			output.close();
 			filename.create(
@@ -762,7 +806,7 @@ public class ChEMBLManager implements IBioclipseManager {
 
 			}
 			for(int i=0 ; i<fam2.size(); i++){
-				s = "B"+(i+1) +",0," + fam2.get(i) + "\n";	
+				s = "B"+(i+1) +",1," + fam2.get(i) + "\n";	
 				byte but[]= s.getBytes();
 				output.write(but); 	
 			}
@@ -856,8 +900,8 @@ public class ChEMBLManager implements IBioclipseManager {
 			" }";
 		return sparql;
 	}
-	
-	
+
+
 	public IStringMatrix mossGetCompoundsFromProteinFamilyWithActivityTarget(String fam, String actType, int limit) 
 	throws BioclipseException{
 
@@ -886,7 +930,7 @@ public class ChEMBLManager implements IBioclipseManager {
 			" } LIMIT" + limit;
 		return sparql;
 	}
-	
+
 
 	public IStringMatrix mossGetCompoundsFromProteinFamilyWithActivity(String fam, String actType, Integer limit) 
 	throws BioclipseException{
@@ -913,9 +957,9 @@ public class ChEMBLManager implements IBioclipseManager {
 
 	public IStringMatrix mossGetCompoundsFromProteinFamilyWithActivityBound(String fam, String actType, Integer lower, Integer upper) 
 	throws BioclipseException{
-		
+
 		return mossSetActivityBound(mossGetCompoundsFromProteinFamilyWithActivity(fam, actType), lower, upper);
-	
+
 	}	
 
 	public List<String> mossAvailableActivities(String fam) throws BioclipseException{
@@ -960,6 +1004,72 @@ public class ChEMBLManager implements IBioclipseManager {
 		int cnt =1;
 		StringMatrix modified = new StringMatrix();
 		modified.setColumnName(1, "actval");
+		modified.setColumnName(3, "smiles");
+		modified.setColumnName(2, "active");
+
+		//test if it contains smiles and activities. Not optimal...
+		for(int i = 1; i<matrix.getColumnCount()+1; i++){
+			if(!(matrix.getColumnName(i).equals("actval")||matrix.getColumnName(i).equals("smiles"))){
+				throw new BioclipseException("The given matrix does not contain right information" +
+				"for a MoSS activity cut-off.");
+			}
+		}
+
+		for(int i = 1; i<matrix.getColumnCount()+1; i++){
+			if(matrix.getColumnName(i).equals("actval")){
+
+				for(int ii = 1; ii< matrix.getRowCount()+1;ii++){
+					if( matrix.get(ii,"actval").equals("")){
+						//matrix.set(ii, "actval", String.valueOf(0));
+//						if(0 >= lower && 0 <= upper){
+//							modified.set(cnt, 1, matrix.get(ii, "actval"));
+//							modified.set(cnt,3,matrix.get(ii,"smiles"));
+//							modified.set(cnt,2,"yes");
+//							cnt++;
+//						}
+						
+						 if(0 <= lower){
+							modified.set(cnt, 1, matrix.get(ii, "actval"));
+							modified.set(cnt,3,matrix.get(ii,"smiles"));
+							modified.set(cnt,2,"no");
+							cnt++;	}
+					}
+					else if(Double.parseDouble(matrix.get(ii,"actval")) >= lower && 
+							Double.parseDouble(matrix.get(ii,"actval")) <= upper){
+						modified.set(cnt, 1, matrix.get(ii, "actval"));
+						modified.set(cnt,3,matrix.get(ii,"smiles"));
+						modified.set(cnt,2,"yes");
+						cnt++;
+					}
+					
+
+					// if value is smaller than lower
+					else if(Double.parseDouble(matrix.get(ii,"actval")) < lower) {
+							modified.set(cnt, 1, matrix.get(ii, "actval"));
+							modified.set(cnt,3,matrix.get(ii,"smiles"));
+							modified.set(cnt,2,"no");
+							cnt++;
+						
+					}
+					//if value is higher than upper
+					else if(Double.parseDouble(matrix.get(ii,"actval")) > upper){
+						modified.set(cnt, 1, matrix.get(ii, "actval"));
+						modified.set(cnt,3,matrix.get(ii,"smiles"));
+						modified.set(cnt,2,"no");
+						cnt++;
+					}
+				}
+			}
+		}
+		return modified;
+	}
+
+
+	public IStringMatrix mossSetActivityOutsideBound(IStringMatrix matrix, int lower, int upper)
+	throws BioclipseException{
+		int cnt =1;
+		StringMatrix modified = new StringMatrix();
+		modified.setColumnName(1, "actval");
 		modified.setColumnName(2, "smiles");
 
 		//test if it contains smiles and activities. Not optimal...
@@ -969,37 +1079,62 @@ public class ChEMBLManager implements IBioclipseManager {
 				"for a MoSS activity cut-off.");
 			}
 		}
-		
+
 		for(int i = 1; i<matrix.getColumnCount()+1; i++){
 			if(matrix.getColumnName(i).equals("actval")){
 				for(int ii = 1; ii< matrix.getRowCount()+1;ii++){
-					if( matrix.get(ii,"actval").equals("")){
-						//matrix.set(ii, "actval", String.valueOf(0));
-						if(0 >= lower && 0 <= upper){
-							modified.set(cnt, 1, matrix.get(ii, "actval"));
-							modified.set(cnt,2,matrix.get(ii,"smiles"));
-							cnt++;
-						}
+
+					//if lower is bigger than 0
+					if( matrix.get(ii,"actval").equals("") && lower > 0){
+						modified.set(cnt, 1, matrix.get(ii, "actval"));
+						modified.set(cnt,2,matrix.get(ii,"smiles"));
+						cnt++;}
+					// if value is smaller than lower
+					else if(Double.parseDouble(matrix.get(ii,"actval")) < lower) {
+						modified.set(cnt, 1, matrix.get(ii, "actval"));
+						modified.set(cnt,2,matrix.get(ii,"smiles"));
+						cnt++;	
+
 					}
-					else if(Double.parseDouble(matrix.get(ii,"actval")) >= lower && 
-							Double.parseDouble(matrix.get(ii,"actval")) <= upper){
+					//if value is higher than upper
+					else if(Double.parseDouble(matrix.get(ii,"actval")) > upper){
 						modified.set(cnt, 1, matrix.get(ii, "actval"));
 						modified.set(cnt,2,matrix.get(ii,"smiles"));
 						cnt++;
 					}
 				}
+
 			}
 		}
 		return modified;
 	}
+
+
+	//					if( matrix.get(ii,"actval").equals("")){
+	//						//matrix.set(ii, "actval", String.valueOf(0));
+	//						if(0 >= lower && 0 <= upper){
+	//							modified.set(cnt, 1, matrix.get(ii, "actval"));
+	//							modified.set(cnt,2,matrix.get(ii,"smiles"));
+	//							cnt++;
+	//						}
+	//					}
+	//					else if(lower >= 0 &&
+	//							Double.parseDouble(matrix.get(ii,"actval")) < lower || 
+	//							Double.parseDouble(matrix.get(ii,"actval")) > upper){
+	//						modified.set(cnt, 1, matrix.get(ii, "actval"));
+	//						modified.set(cnt,2,matrix.get(ii,"smiles"));
+	//						cnt++;
+	//					}
+
+
 	public void moSSViewHistogram(IStringMatrix matrix) throws BioclipseException{
-		
+
 		XYSeries series = new XYSeries("Activity for compounds");
 		HistogramDataset histogramSeries = new HistogramDataset();
 		histogramSeries.setType(HistogramType.FREQUENCY);
 		ArrayList<Double> activites = new ArrayList<Double>();
 		double value;
-	 	int cnt =1;
+		int cnt =1;
 		double[] histact = new double[matrix.getRowCount()+1];
 		for(int i = 1; i< matrix.getRowCount()+1;i++){
 			if(matrix.get(i,"actval").equals("")){ value =0;}
@@ -1037,8 +1172,8 @@ public class ChEMBLManager implements IBioclipseManager {
 		frame.setVisible(true);
 	}
 
-	
-	
-	
+
+
+
 
 }//End
