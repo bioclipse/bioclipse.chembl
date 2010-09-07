@@ -13,10 +13,14 @@ package net.bioclipse.chembl.ui.wizard;
 import java.util.ArrayList;
 import net.bioclipse.chembl.Activator;
 import net.bioclipse.chembl.business.IChEMBLManager;
+//import net.bioclipse.chemoinformatics.wizards.WizardHelper;
 import net.bioclipse.core.business.BioclipseException;
 import net.bioclipse.rdf.model.IStringMatrix;
 
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
@@ -47,13 +51,16 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
 
 public class ChemblWizardPage2 extends WizardPage {
 
 	private IChEMBLManager chembl;
 	private Text textfield;
 	private Label label;
+	private Button browse;
 	private GridData gridData;
+	private WizardNewFileCreationPage newsdPage;
 
 	protected ChemblWizardPage2(String pageName) {
 		super(pageName);
@@ -72,13 +79,13 @@ public class ChemblWizardPage2 extends WizardPage {
 		setControl(container);
 
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(container, "net.bioclipse.chembl.ui.helpmessage");
-		
+
 		label = new Label(container, SWT.NONE);
 		label.setText("Add directory for file");
 		gridData = new GridData();
 		gridData.horizontalSpan=2;
 		label.setLayoutData(gridData);
-		
+
 		textfield = new Text(container, SWT.BORDER);
 		gridData = new GridData(GridData.FILL_HORIZONTAL);
 		textfield.setText("/Virtual/MySave");
@@ -89,6 +96,28 @@ public class ChemblWizardPage2 extends WizardPage {
 				Text txt = (Text)e.getSource();	
 				((ChemblWizard) getWizard()).data.file = txt.getText();
 			}});
+
+
+//		browse = new Button(container, SWT.PUSH);
+//		browse.setText("browse");
+//		gridData = new GridData();
+//		gridData.horizontalSpan = 1;
+//		browse.setLayoutData(gridData);
+//		browse.addSelectionListener(new SelectionAdapter(){
+//			public void widgetSelected(SelectionEvent e) {
+//	            ISelection sel=PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService().getSelection();
+//	            if(sel instanceof IStructuredSelection){
+//	                newsdPage = new WizardNewFileCreationPage("newFilePage1", (IStructuredSelection) sel);
+//	                //newsdPage.setFileName( WizardHelper.findUnusedFileName((IStructuredSelection)sel, "unnamed", ".sdf") );
+//	            }else{
+//	                newsdPage = new WizardNewFileCreationPage("newFilePage1", StructuredSelection.EMPTY);
+//	            }
+//	            newsdPage.setTitle("Choose name and location for new file");
+//	            newsdPage.setDescription("Extension will be .sdf if none is given");
+//	            addPage(newsdPage);
+//			}
+//		});
+
 	}
 }//end
 

@@ -69,7 +69,7 @@ public class ChemblMossWizardPage1 extends WizardPage implements IRunnableContex
 	private GridData gridData;
 	private Combo cbox, cboxAct;
 	private Table table;
-	private TableColumn column1, column2, column3;
+	private TableColumn column1, column2, column3,column4;
 	private Spinner spinn, spinnLow, spinnHigh;
 	private Button button, check, buttonH, buttonUpdate;
 	XYSeries series;
@@ -468,7 +468,7 @@ public class ChemblMossWizardPage1 extends WizardPage implements IRunnableContex
 		gridData.horizontalSpan = 1;
 		labelLow.setLayoutData(gridData);
 		spinnLow = new Spinner(container,SWT.NONE);
-		spinnLow.setSelection(0);
+		spinnLow.setSelection(1);
 		spinnLow.setMaximum(10000000);
 		spinnLow.setIncrement(50);
 		spinnLow.setEnabled(false);
@@ -490,11 +490,23 @@ public class ChemblMossWizardPage1 extends WizardPage implements IRunnableContex
 				table.clearAll();
 				table.removeAll();
 				try {
-					IStringMatrix matrix = chembl.mossSetActivityBound(matrixAct, spinnLow.getSelection(), spinnHigh.getSelection());
+					IStringMatrix mmatrixAct = chembl.mossGetCompoundsFromProteinFamilyWithActivity(cbox.getItem(cbox.getSelectionIndex()),cboxAct.getText());
+					
+					IStringMatrix matrix = chembl.mossSetActivityBound(mmatrixAct, spinnLow.getSelection(), spinnHigh.getSelection());
+//					IStringMatrix m = chembl.mossSetActivityOutsideBound(matrixAct, spinnLow.getSelection(), spinnHigh.getSelection());
 					
 					addToTable(matrix);
+					
+					int yes=0, no =0;
+					
+					for(int index =1; index <matrix.getRowCount()+1; index++){
+						if(matrix.get(index, "active").equals("yes")){
+							yes++;
+						}else no++;
+					}
 					spinn.setSelection(matrix.getRowCount());
-					info.setText("Total compound hit: "+ matrix.getRowCount());
+					info.setText("Total compound hit: "+ matrix.getRowCount()+ ": active: "
+							+yes+ ", inactive: "+ no );
 				} catch (BioclipseException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -547,7 +559,10 @@ public class ChemblMossWizardPage1 extends WizardPage implements IRunnableContex
 		column2 = new TableColumn(table, SWT.NONE);
 		column2.setText("Activity value"); 
 		column3= new TableColumn(table, SWT.NONE);
-		column3.setText("Compounds (SMILES)"); 
+		column3.setText("Active?");
+		column4= new TableColumn(table, SWT.NONE);
+		column4.setText("Compounds (SMILES)"); 
+		
 	}//end container
 
 	// General method for adding items(i.e. compounds) to the table
@@ -566,6 +581,8 @@ public class ChemblMossWizardPage1 extends WizardPage implements IRunnableContex
 		column1.pack();
 		column2.pack();
 		column3.pack();
+		column4.pack();
+		
 	}
 	public void helpToHistogram(IStringMatrix matrix){
 		//Adds activity to histogram series
