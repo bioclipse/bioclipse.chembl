@@ -31,6 +31,7 @@ The Eclipse Public License accompanies this distribution, and is available at ht
 
    <requires>
       <import feature="net.bioclipse.chemoinformatics_feature" version="2.2.0.RC3" match="greaterOrEqual"/>
+      <import feature="net.bioclipse.rdf_feature" version="2.4.0.20100709"/>
    </requires>
 
    <plugin
