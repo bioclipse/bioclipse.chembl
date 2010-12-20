@@ -14,8 +14,9 @@ import java.io.IOException;
 import net.bioclipse.chembl.Activator;
 import net.bioclipse.chembl.business.IChEMBLManager;
 import net.bioclipse.chembl.business.WizardHelper;
-import net.bioclipse.core.ResourcePathTransformer;
-import net.bioclipse.core.business.BioclipseException;
+import net.bioclipse.core.api.BioclipseException;
+import net.bioclipse.core.api.ResourcePathTransformer;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;

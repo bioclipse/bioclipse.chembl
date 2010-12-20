@@ -22,10 +22,10 @@ import org.eclipse.swt.widgets.TableItem;
 import org.jfree.chart.ChartFrame;
 import org.jfree.data.statistics.HistogramDataset;
 
-import net.bioclipse.core.PublishedClass;
-import net.bioclipse.core.PublishedMethod;
-import net.bioclipse.core.business.BioclipseException;
-import net.bioclipse.managers.business.IBioclipseManager;
+import net.bioclipse.core.api.BioclipseException;
+import net.bioclipse.core.api.managers.IBioclipseManager;
+import net.bioclipse.core.api.managers.PublishedClass;
+import net.bioclipse.core.api.managers.PublishedMethod;
 import net.bioclipse.rdf.model.IStringMatrix;
 
 @PublishedClass(

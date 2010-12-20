@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import net.bioclipse.chembl.Activator;
 import net.bioclipse.chembl.business.IChEMBLManager;
 //import net.bioclipse.chemoinformatics.wizards.WizardHelper;
-import net.bioclipse.core.business.BioclipseException;
+import net.bioclipse.core.api.BioclipseException;
 import net.bioclipse.rdf.model.IStringMatrix;
 
 import org.eclipse.jface.dialogs.MessageDialog;

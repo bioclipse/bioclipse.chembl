@@ -16,7 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import net.bioclipse.chembl.Activator;
 import net.bioclipse.chembl.business.IChEMBLManager;
-import net.bioclipse.core.business.BioclipseException;
+import net.bioclipse.core.api.BioclipseException;
 import net.bioclipse.rdf.model.IStringMatrix;
 
 import org.eclipse.core.runtime.IProgressMonitor;

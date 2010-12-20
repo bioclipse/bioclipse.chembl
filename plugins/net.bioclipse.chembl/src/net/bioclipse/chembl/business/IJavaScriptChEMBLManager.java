@@ -10,7 +10,7 @@
  */
 package net.bioclipse.chembl.business;
 
-import net.bioclipse.managers.business.IBioclipseJSManager;
+import net.bioclipse.core.api.managers.IBioclipseJSManager;
 
 public interface IJavaScriptChEMBLManager
        extends IChEMBLManager, IBioclipseJSManager {
