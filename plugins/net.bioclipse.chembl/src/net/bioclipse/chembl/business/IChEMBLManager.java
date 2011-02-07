@@ -25,8 +25,8 @@ import org.jfree.data.statistics.HistogramDataset;
 import net.bioclipse.core.PublishedClass;
 import net.bioclipse.core.PublishedMethod;
 import net.bioclipse.core.business.BioclipseException;
+import net.bioclipse.core.domain.IStringMatrix;
 import net.bioclipse.managers.business.IBioclipseManager;
-import net.bioclipse.rdf.model.IStringMatrix;
 
 @PublishedClass(
 		value="Manager to interact with ChEMBL."

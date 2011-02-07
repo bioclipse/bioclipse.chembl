@@ -10,7 +10,7 @@
  */
 package net.bioclipse.chembl.moss.ui.wizard;
 
-import net.bioclipse.rdf.model.IStringMatrix;
+import net.bioclipse.core.domain.IStringMatrix;
 
 public class ChemblMossData {
 

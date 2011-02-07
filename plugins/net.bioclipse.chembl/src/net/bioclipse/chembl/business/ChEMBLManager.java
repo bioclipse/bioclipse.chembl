@@ -34,11 +34,11 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 import net.bioclipse.core.ResourcePathTransformer;
 import net.bioclipse.core.business.BioclipseException;
+import net.bioclipse.core.domain.IStringMatrix;
+import net.bioclipse.core.domain.StringMatrix;
 import net.bioclipse.managers.business.IBioclipseManager;
 import net.bioclipse.rdf.Activator;
 import net.bioclipse.rdf.business.IJavaRDFManager;
-import net.bioclipse.rdf.model.IStringMatrix;
-import net.bioclipse.rdf.model.StringMatrix;
 
 public class ChEMBLManager implements IBioclipseManager {
 
@@ -600,7 +600,7 @@ public class ChEMBLManager implements IBioclipseManager {
 		monitor.done();
 	}
 
-	//H€T
+	//Hï¿½T
 	public void saveCSVT(String in, Table tab, IProgressMonitor monitor)
 	throws BioclipseException, IOException {
 
