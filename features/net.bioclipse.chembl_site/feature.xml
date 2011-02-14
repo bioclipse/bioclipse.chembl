@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="net.bioclipse.ons_site"
-      label="Bioclipse Open Notebook Science Update Site"
+      id="net.bioclipse.chembl_site"
+      label="Bioclipse ChEMBL Update Site"
       version="1.0.0.qualifier"
       provider-name="The Bioclipse Team">
 
@@ -19,10 +19,6 @@
 
    <includes
          id="net.bioclipse.chembl_feature"
-         version="0.0.0"/>
-
-   <includes
-         id="net.bioclipse.moss_feature"
          version="0.0.0"/>
 
 </feature>
