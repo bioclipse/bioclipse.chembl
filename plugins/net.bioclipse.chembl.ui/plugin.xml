@@ -5,16 +5,16 @@
 	      point = "org.eclipse.ui.newWizards">
 		<category
 		   id = "net.bioclipse.chembl.ui"
-		   name="Chembl">
+		   name="ChEMBL">
 		</category>
 	 	<wizard
 		   id = "net.bioclipse.chembl.ui.wizard.ChemblWizard"
-		   name = "Chembl Wizard"
+		   name = "ChEMBL Wizard"
 		   project="false"
 		   class="net.bioclipse.chembl.ui.wizard.ChemblWizard"
 		   category="net.bioclipse.chembl.ui"
 		   icon="icons/chembl_new4_ring_normal.png">
-	   	   <description>Work with chEMBL</description>
+	   	   <description>Work with ChEMBL</description>
 		   <selection class="org.eclipse.core.resources.IResource"/>
 		</wizard>
 	    </extension>     
@@ -25,7 +25,7 @@
             objectClass="org.eclipse.core.resources.IProject"
             id="net.bioclipse.chembl.ui.contribution1">
          <action
-               label="chembl"
+               label="ChEMBL"
                icon="icons/chembl_new4_ring_normal.png"
                class="net.bioclipse.chembl.ui.wizard.ChemblAction"
                menubarPath="additions"

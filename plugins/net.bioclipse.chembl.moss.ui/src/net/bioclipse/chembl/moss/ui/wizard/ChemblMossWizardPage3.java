@@ -67,7 +67,7 @@ public class ChemblMossWizardPage3 extends WizardPage implements IRunnableContex
 		
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(container, "net.bioclipse.moss.business.helpmessage");
 		setControl(container);
-		setMessage("This is an application for MoSS. Compounds are collected from chEMBL by simply \nchosing a Kinase" +
+		setMessage("This is an application for MoSS. Compounds are collected from ChEMBL by simply \nchosing a Kinase" +
 		" protein family. For further information go to help. ");
 		
 		label = new Label(container, SWT.NONE);

@@ -82,7 +82,7 @@ public class ChemblWizardPage extends WizardPage implements Listener {
 		container.setLayout(layout);
 		setControl(container);
 
-		setMessage("This is a search tool for chEMBL. Searches may be done from eiter a compound or a protein perspective.\n" +
+		setMessage("This is a search tool for ChEMBL. Searches may be done from eiter a compound or a protein perspective.\n" +
 		" Need help? Push the help button for further information. ");
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(container, "net.bioclipse.chembl.ui.helpmessage");
 		setPageComplete(false);
@@ -401,7 +401,7 @@ public class ChemblWizardPage extends WizardPage implements Listener {
 					if(matrix.getRowCount()<=0){
 						setMessage("No hits for your search.");
 					}else{
-						setMessage("This is a search tool for chEMBL. Searches may be done from eiter a compound or a protein perspective.\n" +
+						setMessage("This is a search tool for ChEMBL. Searches may be done from eiter a compound or a protein perspective.\n" +
 						" Need help? Push the help button for further information. ");
 						addToTable(matrix,table,columns);
 						columns[0].setText(matrix.getColumnName(1));
@@ -421,7 +421,7 @@ public class ChemblWizardPage extends WizardPage implements Listener {
 				if(matrix.getRowCount()==0){
 					setMessage("No hits for your search.");
 				}else{
-					setMessage("This is a search tool for chEMBL. Searches may be done from eiter a compound or a protein perspective.\n" +
+					setMessage("This is a search tool for ChEMBL. Searches may be done from eiter a compound or a protein perspective.\n" +
 					" Need help? Push the help button for further information. ");
 					columns[0].setText(matrix.getColumnName(1));
 					addToTable(matrix,table, columns);
@@ -472,7 +472,7 @@ public class ChemblWizardPage extends WizardPage implements Listener {
 					if(matrix.getRowCount()==0){
 						setMessage("No hits for your search.");
 					}else{
-						setMessage("This is a search tool for chEMBL. Searches may be done from eiter a compound or a protein perspective.\n" +
+						setMessage("This is a search tool for ChEMBL. Searches may be done from eiter a compound or a protein perspective.\n" +
 						" Need help? Push the help button for further information. ");
 						addToTable(matrix,table,columns);
 						columns[0].setText(matrix.getColumnName(1));
@@ -492,7 +492,7 @@ public class ChemblWizardPage extends WizardPage implements Listener {
 				if(matrix.getRowCount()==0){
 					setMessage("No hits for your search.");
 				}else{
-					setMessage("This is a search tool for chEMBL. Searches may be done from eiter a compound or a protein perspective.\n" +
+					setMessage("This is a search tool for ChEMBL. Searches may be done from eiter a compound or a protein perspective.\n" +
 					" Need help? Push the help button for further information. ");
 					columns[0].setText(matrix.getColumnName(1));
 					columns[1].setText(matrix.getColumnName(2));
@@ -504,7 +504,7 @@ public class ChemblWizardPage extends WizardPage implements Listener {
 				if(matrix.getRowCount()==0){
 					setMessage("No hits for your search.");
 				}else{
-					setMessage("This is a search tool for chEMBL. Searches may be done from eiter a compound or a protein perspective.\n" +
+					setMessage("This is a search tool for ChEMBL. Searches may be done from eiter a compound or a protein perspective.\n" +
 					" Need help? Push the help button for further information. ");
 					columns[0].setText(matrix.getColumnName(1));
 					columns[1].setText(matrix.getColumnName(2));
@@ -626,7 +626,7 @@ public class ChemblWizardPage extends WizardPage implements Listener {
 			}
 			else{
 				setErrorMessage(null);
-				setMessage("This is a search tool for chEMBL. Searches may be done from eiter a compound or a protein perspective.\n" +
+				setMessage("This is a search tool for ChEMBL. Searches may be done from eiter a compound or a protein perspective.\n" +
 				" Need help? Push the help button for further information. ");
 			table.clearAll();
 			table.removeAll();
@@ -671,7 +671,7 @@ public class ChemblWizardPage extends WizardPage implements Listener {
 			
 			if(helper.size()>0){
 				setErrorMessage(null);
-				setMessage("This is a search tool for chEMBL. Searches may be done from eiter a compound or a protein perspective.\n" +
+				setMessage("This is a search tool for ChEMBL. Searches may be done from eiter a compound or a protein perspective.\n" +
 				" Need help? Push the help button for further information. ");
 				
 			
@@ -701,7 +701,7 @@ public class ChemblWizardPage extends WizardPage implements Listener {
 			}
 			if(helper.size()>0){
 			setErrorMessage(null);
-			setMessage("This is a search tool for chEMBL. Searches may be done from eiter a compound or a protein perspective.\n" +
+			setMessage("This is a search tool for ChEMBL. Searches may be done from eiter a compound or a protein perspective.\n" +
 			" Need help? Push the help button for further information. ");
 			
 			int[] indices = new int [helper.size()];
