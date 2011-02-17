@@ -409,7 +409,7 @@ public class ChemblMossWizardPage2 extends WizardPage implements IRunnableContex
 			}
 		});
 		label = new Label(container, SWT.NONE);
-		label.setText("Look at activty span: ");
+		label.setText("Look at activity span: ");
 		gridData = new GridData();
 		gridData.horizontalSpan=1;
 		label.setLayoutData(gridData);

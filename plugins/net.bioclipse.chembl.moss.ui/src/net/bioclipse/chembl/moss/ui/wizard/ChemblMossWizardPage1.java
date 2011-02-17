@@ -422,7 +422,7 @@ public class ChemblMossWizardPage1 extends WizardPage implements IRunnableContex
 			}
 		});
 		label = new Label(container, SWT.NONE);
-		label.setText("Look at activty span: ");
+		label.setText("Look at activity span: ");
 		label.setToolTipText("The graph don't consider limited search, will display for all available compounds");
 		gridData = new GridData();
 		gridData.horizontalSpan=1;
