@@ -14,54 +14,37 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import net.bioclipse.chembl.Activator;
 import net.bioclipse.chembl.business.IChEMBLManager;
 import net.bioclipse.core.business.BioclipseException;
 import net.bioclipse.core.domain.IStringMatrix;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.operation.ModalContext;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ControlAdapter;
-import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartFrame;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.category.CategoryDataset;
-import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.statistics.HistogramDataset;
 import org.jfree.data.statistics.HistogramType;
-import org.jfree.data.xy.IntervalXYDataset;
 import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
-import org.jfree.ui.RefineryUtilities;
 public class ChemblMossWizardPage1 extends WizardPage implements IRunnableContext{
 
 	private IChEMBLManager chembl;
@@ -102,8 +85,7 @@ public class ChemblMossWizardPage1 extends WizardPage implements IRunnableContex
 
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(container, "net.bioclipse.moss.business.helpmessage");
 		setControl(container);
-		setMessage("This is an application for MoSS. Compounds are collected from ChEMBL by simply \nchosing a Kinase" +
-		" protein family. For further information go to help. ");
+		setMessage("Select the first protein family to compare with substructure mining.");
 		setPageComplete(false);
 
 
@@ -112,7 +94,7 @@ public class ChemblMossWizardPage1 extends WizardPage implements IRunnableContex
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.horizontalSpan = 2;
 		label.setLayoutData(gridData);
-		label.setText("Choose Kinase Protein Familes");
+		label.setText("Choose a Kinase Protein Family");
 
 		cbox = new Combo(container,SWT.READ_ONLY);
 		cbox.setToolTipText("Kinase family");
@@ -384,17 +366,15 @@ public class ChemblMossWizardPage1 extends WizardPage implements IRunnableContex
 		});	
 		
 		
-		label = new Label(container, SWT.NONE);
-		label.setText("Optional: Modify activity values.");
-		Font font1 = new Font(container.getDisplay(), "Helvetica", 15, SWT.NONE);
-        label.setFont(font1);
-		gridData = new GridData();
-		gridData.horizontalSpan=4;
-		gridData.verticalSpan=5;
-		label.setLayoutData(gridData);
+//		label = new Label(container, SWT.NONE);
+//		label.setText("Optional: Modify activity values.");
+//		gridData = new GridData();
+//		gridData.horizontalSpan=4;
+//		gridData.verticalSpan=5;
+//		label.setLayoutData(gridData);
 		
 		check = new Button(container, SWT.CHECK);
-		check.setText("Modify activities");
+		check.setText("Modify activities (optional)");
 		check.setToolTipText("Modify data by specifying upper and lower activity limit");
 		check.setEnabled(false);
 		gridData = new GridData(GridData.BEGINNING);

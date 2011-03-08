@@ -102,8 +102,7 @@ public class ChemblMossWizardPage2 extends WizardPage implements IRunnableContex
 
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(container, "net.bioclipse.moss.business.helpmessage");
 		setControl(container);
-		setMessage("This is an application for MoSS. Compounds are collected from ChEMBL by simply \nchosing a Kinase" +
-		" protein family. For further information go to help. ");
+		setMessage("Select the first protein family to compare with substructure mining.");
 		setPageComplete(true);
 
 
@@ -424,10 +423,11 @@ public class ChemblMossWizardPage2 extends WizardPage implements IRunnableContex
 			public void widgetSelected(SelectionEvent e) {		    	
 
 				
-				JFreeChart jfreechart = ChartFactory.createXYLineChart("Histogram Demo", "Activity values", 
-						"Number of compounds", histogramSeries,
-						PlotOrientation.VERTICAL, true, false, false); 
-
+				JFreeChart jfreechart = ChartFactory.createXYLineChart(
+					"Histogram Demo", "Activity values", 
+					"Number of compounds", histogramSeries,
+					PlotOrientation.VERTICAL, true, false, false
+				);
 
 //				final XYSeriesCollection dataset = new XYSeriesCollection(series);
 //				JFreeChart chart = ChartFactory.createXYBarChart(
