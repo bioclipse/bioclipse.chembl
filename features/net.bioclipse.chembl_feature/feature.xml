@@ -2,7 +2,7 @@
 <feature
       id="net.bioclipse.chembl_feature"
       label="Bioclipse ChEMBL Feature"
-      version="2.4.0.RC1"
+      version="2.5.0.qualifier"
       provider-name="The Bioclipse Team"
       plugin="net.bioclipse.chembl">
 
@@ -11,8 +11,7 @@
    </description>
 
    <copyright>
-      Copyright (c) 2009 The Bioclipse Project Team and others.
-All rights reserved.
+      Copyright (c) 2009-2011 The Bioclipse Project Team and others.
 
 The MoSS library is licensed LGPL.
    </copyright>
@@ -30,9 +29,9 @@ The Eclipse Public License accompanies this distribution, and is available at ht
    </url>
 
    <requires>
-      <import feature="net.bioclipse.chemoinformatics_feature" version="2.2.0.RC3" match="greaterOrEqual"/>
-      <import feature="net.bioclipse.rdf_feature" version="2.4.0.20100709"/>
-      <import feature="net.bioclipse.moss_feature" version="2.4.0.20100709"/>
+      <import feature="net.bioclipse.chemoinformatics_feature"/>
+      <import feature="net.bioclipse.rdf_feature"/>
+      <import feature="net.bioclipse.moss_feature"/>
    </requires>
 
    <plugin
